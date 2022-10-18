@@ -26,6 +26,20 @@ RUN pip-reqs compile && \
         --requirement requirements.urls
 # </PYTHON>
 
+#### oAuth support
+RUN apt-get update
+RUN apt-get install -y openssl
+RUN apt-get install -y libssl-dev
+RUN apt-get install -y build-essential
+# Get Rust
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+#biuld crypto
+RUN pip install --upgrade pippip install --upgrade pip
+RUN pip install cryptography
+RUN pip install social-auth-app-django
+####
+
 # <SOURCE>
 COPY . /app
 # </SOURCE>
@@ -36,3 +50,6 @@ COPY . /app
 # <STATIC>
 RUN DJANGO_MODE=build python manage.py collectstatic --noinput
 # </STATIC>
+
+#DB for modules
+RUN DJANGO_MODE=build python manage.py migrate
